@@ -49,9 +49,11 @@ struct NativeHandleDeleter
 }
 
 mcla::GrallocRegistrar::GrallocRegistrar() {
-    // Force libhybris EGL platform to initialize gralloc
-    // FIXME: causes deadlock if window code gets called from inside libEGL
-    // eglGetDisplay(EGL_DEFAULT_DISPLAY);
+    // Initialize gralloc module unless it was already done by libhybris EGL platform
+    if (hybris_gralloc_get_version() == -1)
+    {
+        hybris_gralloc_initialize(0);
+    }
 }
 
 namespace
